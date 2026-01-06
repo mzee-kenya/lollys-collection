@@ -40,11 +40,23 @@ If you want the signing server deployed as well, I can help deploy it to Render/
 
 If the upload fails, check the console for Cloudinary error details and confirm your preset is set to unsigned.
 
+Quick fix for GitHub Pages (unsigned uploads) ✅
+
+If you want the site deployed via GitHub Pages to allow uploads without a signing server, follow these steps:
+
+1. In your Cloudinary dashboard, create an **unsigned** upload preset and note the preset name. See Cloudinary docs for help.
+2. Add the following **Repository Secrets** in GitHub settings for this repo:
+   - `VITE_CLOUDINARY_CLOUD_NAME` — your Cloudinary cloud name
+   - `VITE_CLOUDINARY_UPLOAD_PRESET` — the unsigned preset name
+3. The workflow will write those into `.env` at build time and set `VITE_USE_SIGNED_UPLOADS=false` so the deployed site performs unsigned uploads directly from the browser.
+
+This is a convenient quick fix for testing and demos. For production, consider deploying the signing server and using signed uploads to avoid exposing unsigned presets publicly.
+
 ### Optional: Signed uploads (secure)
 You can optionally use *signed* uploads to avoid using unsigned presets. To do this safely:
 
 1. Run the signing server in `/server` which reads your server-side `CLOUDINARY_URL` environment variable (format: `cloudinary://API_KEY:API_SECRET@CLOUD_NAME`).
-2. Set `VITE_USE_SIGNED_UPLOADS=true` and `VITE_CLOUDINARY_SIGN_URL` to point to your signing endpoint (e.g., `http://localhost:4000/api/sign`).
+2. Set `VITE_USE_SIGNED_UPLOADS=true` and `VITE_CLOUDINARY_SIGN_URL` to point to your signing endpoint (e.g., `https://your-signing-server.example/api/sign`).
 3. The client requests a signature from the signing server and then performs a signed upload to Cloudinary using the returned `api_key`, `timestamp`, and `signature`.
 
 Security note: **Never** commit your `CLOUDINARY_URL`, API key, or API secret to your repository. Use environment variables in your deployment platform instead.

@@ -25,8 +25,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
-        run: npm run build
+      - name: Build (write production env for unsigned uploads)
+        run: |
+          echo "VITE_CLOUDINARY_CLOUD_NAME=${{ secrets.VITE_CLOUDINARY_CLOUD_NAME }}" > .env
+          echo "VITE_CLOUDINARY_UPLOAD_PRESET=${{ secrets.VITE_CLOUDINARY_UPLOAD_PRESET }}" >> .env
+          echo "VITE_USE_SIGNED_UPLOADS=false" >> .env
+          cat .env
+          npm run build
 
       - name: Configure Pages
         uses: actions/configure-pages@v3
