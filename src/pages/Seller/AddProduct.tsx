@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import ImageUploader from '../../components/ImageUploader'
 import type { Product } from '../../types/Product'
+import { useProductsStore } from '../../store/useProductsStore'
 
 export default function AddProduct() {
+  const addProduct = useProductsStore((s) => s.add)
   const [form, setForm] = useState<{ name: string; price: string; category: string; image?: string }>({
     name: '',
     price: '',
@@ -36,9 +38,9 @@ export default function AddProduct() {
       image: form.image,
     }
 
-    // Simulated submit - in a real app we'd POST to an API
-    console.log('New product', product)
-    setMessage('Product created successfully (simulated).')
+    // Save to local products store (simulated persistence)
+    addProduct(product)
+    setMessage('Product created successfully.')
     setForm({ name: '', price: '', category: '' })
   }
 
