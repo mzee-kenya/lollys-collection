@@ -2,9 +2,12 @@ import React, { useState } from 'react'
 import ImageUploader from '../../components/ImageUploader'
 import type { Product } from '../../types/Product'
 import { useProductsStore } from '../../store/useProductsStore'
+import { useSessionStore } from '../../store/useSessionStore'
+import { createProduct } from '../../services/api'
 
 export default function AddProduct() {
   const addProduct = useProductsStore((s) => s.add)
+  const user = useSessionStore((s) => s.user)
   const [form, setForm] = useState<{ name: string; price: string; category: string; image?: string }>({
     name: '',
     price: '',
@@ -21,7 +24,7 @@ export default function AddProduct() {
     setForm((s) => ({ ...s, image: url }))
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     // Basic validation
     const price = parseFloat(form.price)
@@ -36,12 +39,17 @@ export default function AddProduct() {
       price: price,
       category: form.category,
       image: form.image,
+      seller_id: user?.id,
     }
 
-    // Save to local products store (simulated persistence)
-    addProduct(product)
-    setMessage('Product created successfully.')
-    setForm({ name: '', price: '', category: '' })
+    // Persist to server
+    try {
+      await createProduct(product, user?.id)
+      setMessage('Product created successfully.')
+      setForm({ name: '', price: '', category: '' })
+    } catch (err: any) {
+      setMessage(`Failed to create product: ${err.message || String(err)}`)
+    }
   }
 
   return (
@@ -53,7 +61,7 @@ export default function AddProduct() {
           <input name="name" value={form.name} onChange={handleChange} className="w-full border p-2 rounded" />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Price (USD)</label>
+          <label className="block text-sm font-medium mb-1">Price (KES)</label>
           <input name="price" value={form.price} onChange={handleChange} className="w-full border p-2 rounded" />
         </div>
         <div>
