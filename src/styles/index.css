@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root{
+  --color-kilimall: #FF7A00;
+}
+
+body { @apply bg-white text-gray-900; }
+
+/* Simple container */
+.container { max-width: 98rem; margin-left: auto; margin-right: auto; }
