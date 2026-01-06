@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: lollys-collection-signing-server
+    env: node
+    branch: main
+    plan: free
+    buildCommand: "cd server && npm ci"
+    startCommand: "node server/index.js"
+    autoDeploy: true
+    disk: 1024
+    envVars:
+      - key: CORS_ORIGIN
+        value: "https://mzee-kenya.github.io/lollys-collection"
+
+# Notes:
+# - Do NOT add CLOUDINARY_URL in this file. Add it in the Render dashboard Secrets for the service after creation.
+# - Render will run the buildCommand and startCommand from the repo root; the server lives in `server/`.
