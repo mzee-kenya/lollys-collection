@@ -19,6 +19,14 @@ VITE_CLOUDINARY_UPLOAD_PRESET
 ## Run
 - Install: `npm install`
 - Dev: `npm run dev`
+- Build: `npm run build` (builds into `dist` which is deployed to GitHub Pages)
+
+## Deployment
+This repo includes a GitHub Actions workflow that builds and deploys the frontend to GitHub Pages on every push to `main`.
+
+**Expected site URL:** https://mzee-kenya.github.io/lollys-collection/  (the workflow will publish the built `dist` directory to GitHub Pages)
+
+If you want the signing server deployed as well, I can help deploy it to Render/Vercel/Heroku and add secrets to this repo.
 
 ## Notes
 - The Cloudinary service uses unsigned uploads (upload preset must be configured in your Cloudinary dashboard).
